@@ -59,15 +59,52 @@ exports.createProduct = async (req, res) => {
 };
 
 exports.getAllProducts = async (req, res) => {
-  const products = await Product.find();
-  res.json(products);
+  const { search = "", page = 1 } = req.query;
+  const limit = 2;
+  const skip = (page - 1) * limit;
+
+  const query = search
+    ? { name: { $regex: search, $options: "i" } } // case-insensitive search
+    : {};
+
+  try {
+    const products = await Product.find(query).skip(skip).limit(limit);
+    const total = await Product.countDocuments(query);
+
+    res.json({
+      data: products,
+      page: Number(page),
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+    });
+  } catch (err) {
+    console.error("❌ Get all products error:", err);
+    res.status(500).json({ error: "Failed to fetch products" });
+  }
 };
 
 exports.getProductsByCategory = async (req, res) => {
   const { category } = req.params;
-  const products = await Product.find({ category });
-  res.json(products);
+  const { page = 1 } = req.query;
+  const limit = 10;
+  const skip = (page - 1) * limit;
+
+  try {
+    const products = await Product.find({ category }).skip(skip).limit(limit);
+    const total = await Product.countDocuments({ category });
+
+    res.json({
+      data: products,
+      page: Number(page),
+      totalPages: Math.ceil(total / limit),
+      totalItems: total,
+    });
+  } catch (err) {
+    console.error("❌ Get products by category error:", err);
+    res.status(500).json({ error: "Failed to fetch category products" });
+  }
 };
+
 
 exports.updateProduct = async (req, res) => {
   try {

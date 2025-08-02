@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const productRoutes = require("./routes/product.routes");
 const announcementRoutes = require("./routes/announcement.routes");
+const adminRoutes = require("./routes/admin.routes");
 const path = require("path");
 const app = express();
 
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use("/api/products", productRoutes);
 app.use("/api/announcements", announcementRoutes);
+app.use("/api/admin", adminRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // app.use("/uploads", express.static("uploads"));
