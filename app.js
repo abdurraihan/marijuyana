@@ -6,6 +6,7 @@ const cors = require("cors");
 const productRoutes = require("./routes/product.routes");
 const announcementRoutes = require("./routes/announcement.routes");
 const adminRoutes = require("./routes/admin.routes");
+const categoryRoutes = require("./routes/category.routes");
 const path = require("path");
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(express.json());
 app.use("/api/products", productRoutes);
 app.use("/api/announcements", announcementRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/categories", categoryRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // app.use("/uploads", express.static("uploads"));
